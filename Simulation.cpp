@@ -130,22 +130,27 @@ void simulation() {
         Particle b = EventParticle[j];
         double invMass = a.InvMass(b);
         h6->Fill(invMass);
-        if (a.getCharge() != b.getCharge()) {
+       /* if (a.getPCharge() != b.getPCharge()) {
           h7->Fill(invMass);
-        }
-        if (a.getCharge() == b.getCharge()) {
+          continue;
+        }*/
+       /* if (a.getPCharge() == b.getPCharge()) {
           h7->Fill(invMass);
-        }
+          continue;
+        }*/
         if ((a.getIndex() == 0 && b.getIndex() == 3) ||
             (a.getIndex() == 1 && b.getIndex() == 2)) {
           h8->Fill(invMass);
+          continue;
         }
         if ((a.getIndex() == 0 && b.getIndex() == 2) ||
             (a.getIndex() == 1 && b.getIndex() == 3)) {
           h9->Fill(invMass);
+          continue;
         }
         if (i > (size - nDecay)) {
           h10->Fill(invMass);
+          continue;
         }
       }
     }

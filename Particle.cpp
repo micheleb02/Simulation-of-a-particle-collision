@@ -82,7 +82,10 @@ double Particle::getEnergy() const {
   return std::sqrt(getMass() * getMass() + fPx * fPx + fPy * fPy + fPz * fPz);
 }
 
-int Particle::getCharge() const {return fParticleType[getIndex()]->getCharge();}
+int Particle::getPCharge() const {
+  int index = getIndex();
+  fParticleType[index]->getCharge();
+}
 
 double Particle::InvMass(Particle &p) const {
   double sumE2 = (getEnergy() + p.getEnergy()) * (getEnergy() + p.getEnergy());
