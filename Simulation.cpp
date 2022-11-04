@@ -40,6 +40,14 @@ void simulation() {
   TH1F *h4 = new TH1F("h4", "Trasverse impulse distribution", 1000, 0, 5);
   TH1F *h5 = new TH1F("h5", "Energy distribution", 1000, 0, 10);
   TH1F *h6 = new TH1F("h6", "Invariant mass", 1000, 0, 10);
+  TH1F *h7 =
+      new TH1F("h7", "Invariant mass between discord charge", 1000, 0, 10);
+  TH1F *h8 = new TH1F("h8", "Invariant mass between specific particles (1)",
+                      1000, 0, 10);
+  TH1F *h9 = new TH1F("h9", "Invariant mass between specific particles (2)",
+                      1000, 0, 10);
+  TH1F *h10 =
+      new TH1F("h10", "Invariant mass between decayed products", 1000, 0, 10);
 
   TCanvas *c1 = new TCanvas("c1", "Type distribution", 200, 10, 600, 400);
   TCanvas *c2 = new TCanvas("c2", "Angle distribution", 200, 10, 600, 400);
@@ -114,11 +122,31 @@ void simulation() {
     }
 
     int size = EventParticle.size();
+    int nDecay = Resonance.size();
 
     for (int i = 0; i < size; ++i) {
       for (int j = i + 1; j < size; ++j) {
-        double invMass = EventParticle[i].InvMass(EventParticle[j]);
+        Particle a = EventParticle[i];
+        Particle b = EventParticle[j];
+        double invMass = a.InvMass(b);
         h6->Fill(invMass);
+        if (a.getCharge() != b.getCharge()) {
+          h7->Fill(invMass);
+        }
+        if (a.getCharge() == b.getCharge()) {
+          h7->Fill(invMass);
+        }
+        if ((a.getIndex() == 0 && b.getIndex() == 3) ||
+            (a.getIndex() == 1 && b.getIndex() == 2)) {
+          h8->Fill(invMass);
+        }
+        if ((a.getIndex() == 0 && b.getIndex() == 2) ||
+            (a.getIndex() == 1 && b.getIndex() == 3)) {
+          h9->Fill(invMass);
+        }
+        if (i > (size - nDecay)) {
+          h10->Fill(invMass);
+        }
       }
     }
 
@@ -137,5 +165,5 @@ void simulation() {
   c5->cd();
   h5->Draw();
   c6->cd();
-  h6->Draw();
+  h10->Draw();
 }

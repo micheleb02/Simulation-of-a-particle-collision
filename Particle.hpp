@@ -19,6 +19,7 @@ public:
   double getPz() const;
   double getMass() const;
   double getEnergy() const;
+  int getCharge() const;
   double InvMass(Particle &p) const;
   void setP(double px, double py, double pz);
   int Decay2body(Particle &dau1, Particle &dau2) const;
