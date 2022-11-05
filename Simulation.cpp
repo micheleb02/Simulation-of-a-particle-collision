@@ -1,5 +1,6 @@
 #include "Particle.hpp"
 #include "TCanvas.h"
+#include "TFile.h"
 #include "TH1F.h"
 #include "TH3F.h"
 #include "TMath.h"
@@ -41,16 +42,24 @@ void simulation() {
   TH1F *h4 = new TH1F("h4", "Trasverse impulse distribution", 1000, 0, 5);
   TH1F *h5 = new TH1F("h5", "Energy distribution", 1000, 0, 10);
   TH1F *h6 = new TH1F("h6", "Invariant mass", 1000, 0, 10);
+  h6->Sumw2();
   TH1F *h7 =
       new TH1F("h7", "Invariant mass between discord charge", 1000, 0, 10);
+  h7->Sumw2();
   TH1F *h8 = new TH1F("h8", "Invariant mass between same charge particles",
                       1000, 0, 10);
+  h8->Sumw2();
   TH1F *h9 = new TH1F("h9", "Invariant mass between specific particles (1)",
                       1000, 0, 10);
+  h9->Sumw2();
   TH1F *h10 = new TH1F("h10", "Invariant mass between specific particles (2)",
                        1000, 0, 10);
+  h10->Sumw2();
   TH1F *h11 =
       new TH1F("h11", "Invariant mass between decayed products", 1000, 0, 10);
+  h11->Sumw2();
+
+  TH1 *HTOT[11] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
 
   TCanvas *c1 = new TCanvas("c1", "Type distribution", 200, 10, 600, 400);
   TCanvas *c2 = new TCanvas("c2", "Angle distribution", 200, 10, 600, 400);
@@ -59,8 +68,21 @@ void simulation() {
       new TCanvas("c4", "Trasverse impulse distribution", 200, 10, 600, 400);
   TCanvas *c5 = new TCanvas("c5", "Energy distribution", 200, 10, 600, 400);
   TCanvas *c6 = new TCanvas("c6", "Invariant mass", 200, 10, 600, 400);
+  TCanvas *c7 = new TCanvas("c7", "Invariant mass between discord charge", 200,
+                            10, 600, 400);
+  TCanvas *c8 = new TCanvas(
+      "c8", "Invariant mass between same charge particles", 200, 10, 600, 400);
+  TCanvas *c9 = new TCanvas(
+      "c9", "Invariant mass between specific particles (1)", 200, 10, 600, 400);
+  TCanvas *c10 =
+      new TCanvas("c10", "Invariant mass between specific particles (2)", 200,
+                  10, 600, 400);
+  TCanvas *c11 = new TCanvas("c11", "Invariant mass between decayed products",
+                             200, 10, 600, 400);
 
-  for (int i = 0; i < 10000; ++i) {
+  TCanvas *CTOT[11] = {c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11};
+
+  for (int i = 0; i < 1E5; ++i) {
     for (int j = 0; j < 100; ++j) {
 
       var = gRandom->Rndm();
@@ -104,6 +126,7 @@ void simulation() {
         Decay.push_back(a);
         Resonance.push_back(b);
         Resonance.push_back(c);
+        h11->Fill(b.InvMass(c));
       } else {
         Particle a = Particle(n, px, py, pz);
         Particle b = Particle(p);
@@ -112,6 +135,7 @@ void simulation() {
         Decay.push_back(a);
         Resonance.push_back(b);
         Resonance.push_back(c);
+        h11->Fill(b.InvMass(c));
       }
     }
 
@@ -130,9 +154,8 @@ void simulation() {
     }
 
     int size = EventParticle.size();
-    int nDecay = Resonance.size();
 
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < size - 1; ++i) {
       for (int j = i + 1; j < size; ++j) {
         Particle a = EventParticle[i];
         Particle b = EventParticle[j];
@@ -140,43 +163,33 @@ void simulation() {
         h6->Fill(invMass);
         if (a.getPCharge() != b.getPCharge()) {
           h7->Fill(invMass);
-          continue;
         }
         if (a.getPCharge() == b.getPCharge()) {
           h8->Fill(invMass);
-          continue;
         }
         if ((a.getIndex() == 0 && b.getIndex() == 3) ||
             (a.getIndex() == 1 && b.getIndex() == 2)) {
           h9->Fill(invMass);
-          continue;
         }
         if ((a.getIndex() == 0 && b.getIndex() == 2) ||
             (a.getIndex() == 1 && b.getIndex() == 3)) {
           h10->Fill(invMass);
-          continue;
-        }
-        if (i > (size - nDecay)) {
-          h11->Fill(invMass);
-          continue;
         }
       }
     }
 
     EventParticle.clear();
     Resonance.clear();
+    Decay.clear();
   }
 
-  c1->cd();
-  h6->Draw();
-  c2->cd();
-  h7->Draw();
-  c3->cd();
-  h8->Draw();
-  c4->cd();
-  h9->Draw();
-  c5->cd();
-  h10->Draw();
-  c6->cd();
-  h11->Draw();
+  TFile *Histos = new TFile("Particles_histo.root", "RECREATE");
+  for (int i = 0; i < 11; ++i) {
+    CTOT[i]->cd();
+    HTOT[i]->DrawCopy();
+    HTOT[i]->Write();
+  }
+
+  Histos->Close();
+  
 }
