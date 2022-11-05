@@ -11,6 +11,7 @@ void simulation() {
 
   std::vector<Particle> EventParticle;
   std::vector<Particle> Resonance;
+  std::vector<Particle> Decay;
 
   char *p = new char{'p'};
   char *P = new char{'P'};
@@ -42,12 +43,14 @@ void simulation() {
   TH1F *h6 = new TH1F("h6", "Invariant mass", 1000, 0, 10);
   TH1F *h7 =
       new TH1F("h7", "Invariant mass between discord charge", 1000, 0, 10);
-  TH1F *h8 = new TH1F("h8", "Invariant mass between specific particles (1)",
+  TH1F *h8 = new TH1F("h8", "Invariant mass between same charge particles",
                       1000, 0, 10);
-  TH1F *h9 = new TH1F("h9", "Invariant mass between specific particles (2)",
+  TH1F *h9 = new TH1F("h9", "Invariant mass between specific particles (1)",
                       1000, 0, 10);
-  TH1F *h10 =
-      new TH1F("h10", "Invariant mass between decayed products", 1000, 0, 10);
+  TH1F *h10 = new TH1F("h10", "Invariant mass between specific particles (2)",
+                       1000, 0, 10);
+  TH1F *h11 =
+      new TH1F("h11", "Invariant mass between decayed products", 1000, 0, 10);
 
   TCanvas *c1 = new TCanvas("c1", "Type distribution", 200, 10, 600, 400);
   TCanvas *c2 = new TCanvas("c2", "Angle distribution", 200, 10, 600, 400);
@@ -98,7 +101,7 @@ void simulation() {
         Particle b = Particle(P);
         Particle c = Particle(k);
         a.Decay2body(b, c);
-        EventParticle.push_back(a);
+        Decay.push_back(a);
         Resonance.push_back(b);
         Resonance.push_back(c);
       } else {
@@ -106,13 +109,18 @@ void simulation() {
         Particle b = Particle(p);
         Particle c = Particle(K);
         a.Decay2body(b, c);
-        EventParticle.push_back(a);
+        Decay.push_back(a);
         Resonance.push_back(b);
         Resonance.push_back(c);
       }
     }
 
     for (auto k : EventParticle) {
+      h1->Fill(k.getIndex());
+      h5->Fill(k.getEnergy());
+    }
+
+    for (auto k : Decay) {
       h1->Fill(k.getIndex());
       h5->Fill(k.getEnergy());
     }
@@ -130,26 +138,26 @@ void simulation() {
         Particle b = EventParticle[j];
         double invMass = a.InvMass(b);
         h6->Fill(invMass);
-       /* if (a.getPCharge() != b.getPCharge()) {
+        if (a.getPCharge() != b.getPCharge()) {
           h7->Fill(invMass);
           continue;
-        }*/
-       /* if (a.getPCharge() == b.getPCharge()) {
-          h7->Fill(invMass);
+        }
+        if (a.getPCharge() == b.getPCharge()) {
+          h8->Fill(invMass);
           continue;
-        }*/
+        }
         if ((a.getIndex() == 0 && b.getIndex() == 3) ||
             (a.getIndex() == 1 && b.getIndex() == 2)) {
-          h8->Fill(invMass);
+          h9->Fill(invMass);
           continue;
         }
         if ((a.getIndex() == 0 && b.getIndex() == 2) ||
             (a.getIndex() == 1 && b.getIndex() == 3)) {
-          h9->Fill(invMass);
+          h10->Fill(invMass);
           continue;
         }
         if (i > (size - nDecay)) {
-          h10->Fill(invMass);
+          h11->Fill(invMass);
           continue;
         }
       }
@@ -160,15 +168,15 @@ void simulation() {
   }
 
   c1->cd();
-  h1->Draw();
+  h6->Draw();
   c2->cd();
-  h2->Draw();
+  h7->Draw();
   c3->cd();
-  h3->Draw();
+  h8->Draw();
   c4->cd();
-  h4->Draw();
+  h9->Draw();
   c5->cd();
-  h5->Draw();
-  c6->cd();
   h10->Draw();
+  c6->cd();
+  h11->Draw();
 }

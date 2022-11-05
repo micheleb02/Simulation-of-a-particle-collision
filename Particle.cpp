@@ -83,8 +83,7 @@ double Particle::getEnergy() const {
 }
 
 int Particle::getPCharge() const {
-  int index = getIndex();
-  fParticleType[index]->getCharge();
+  return fParticleType[getIndex()]->getCharge();
 }
 
 double Particle::InvMass(Particle &p) const {
