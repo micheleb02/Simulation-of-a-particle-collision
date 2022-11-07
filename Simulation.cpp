@@ -183,7 +183,7 @@ void simulation() {
     Decay.clear();
   }
 
-  TFile *Histos = new TFile("Particles_histo.root", "RECREATE");
+  TFile *Histos = new TFile("Data.root", "RECREATE");
   for (int i = 0; i < 11; ++i) {
     CTOT[i]->cd();
     HTOT[i]->DrawCopy();
@@ -191,5 +191,4 @@ void simulation() {
   }
 
   Histos->Close();
-  
 }
