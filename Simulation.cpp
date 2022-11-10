@@ -2,7 +2,7 @@
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TH1F.h"
-#include "TH3F.h"
+#include "TH2F.h"
 #include "TMath.h"
 #include "TRandom.h"
 
@@ -36,8 +36,8 @@ void simulation() {
   double m = 0;
 
   TH1F *h1 = new TH1F("h1", "Type distribution", 7, 0, 7);
-  TH3F *h2 =
-      new TH3F("h2", "Angle distribution", 100, -1, 1, 100, -1, 1, 100, -1, 1);
+  TH2F *h2 = new TH2F("h2", "Angle distribution", 100, 0, 2 * TMath::Pi(), 100,
+                      0, TMath::Pi());
   TH1F *h3 = new TH1F("h3", "Impulse distribution", 1000, 0, 5);
   TH1F *h4 = new TH1F("h4", "Trasverse impulse distribution", 1000, 0, 5);
   TH1F *h5 = new TH1F("h5", "Energy distribution", 1000, 0, 10);
@@ -49,14 +49,16 @@ void simulation() {
   TH1F *h8 = new TH1F("h8", "Invariant mass between same charge particles",
                       1000, 0, 10);
   h8->Sumw2();
-  TH1F *h9 = new TH1F("h9", "Invariant mass between specific particles (1)",
-                      1000, 0, 10);
+  TH1F *h9 =
+      new TH1F("h9", "Invariant mass between pion+ -- kaon- and pion- -- kaon+",
+               1000, 0, 10);
   h9->Sumw2();
-  TH1F *h10 = new TH1F("h10", "Invariant mass between specific particles (2)",
-                       1000, 0, 10);
+  TH1F *h10 = new TH1F(
+      "h10", "Invariant mass between pion+ -- kaon+ and pion- -- kaon-", 1000,
+      0, 10);
   h10->Sumw2();
   TH1F *h11 =
-      new TH1F("h11", "Invariant mass between decayed products", 1000, 0, 10);
+      new TH1F("h11", "Invariant mass between decay products", 1000, 0, 10);
   h11->Sumw2();
 
   TH1 *HTOT[11] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
@@ -68,16 +70,19 @@ void simulation() {
       new TCanvas("c4", "Trasverse impulse distribution", 200, 10, 600, 400);
   TCanvas *c5 = new TCanvas("c5", "Energy distribution", 200, 10, 600, 400);
   TCanvas *c6 = new TCanvas("c6", "Invariant mass", 200, 10, 600, 400);
-  TCanvas *c7 = new TCanvas("c7", "Invariant mass between discord charge", 200,
-                            10, 600, 400);
-  TCanvas *c8 = new TCanvas(
-      "c8", "Invariant mass between same charge particles", 200, 10, 600, 400);
+  TCanvas *c7 =
+      new TCanvas("c7", "Invariant mass between particles with opposite charge",
+                  200, 10, 600, 400);
+  TCanvas *c8 =
+      new TCanvas("c8", "Invariant mass between particles with the same charge",
+                  200, 10, 600, 400);
   TCanvas *c9 = new TCanvas(
-      "c9", "Invariant mass between specific particles (1)", 200, 10, 600, 400);
-  TCanvas *c10 =
-      new TCanvas("c10", "Invariant mass between specific particles (2)", 200,
-                  10, 600, 400);
-  TCanvas *c11 = new TCanvas("c11", "Invariant mass between decayed products",
+      "c9", "Invariant mass between pion+ -- kaon- and pion- -- kaon+", 200, 10,
+      600, 400);
+  TCanvas *c10 = new TCanvas(
+      "c10", "Invariant mass between pion+ -- kaon+ and pion- -- kaon-", 200,
+      10, 600, 400);
+  TCanvas *c11 = new TCanvas("c11", "Invariant mass between decay products",
                              200, 10, 600, 400);
 
   TCanvas *CTOT[11] = {c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11};
@@ -86,16 +91,16 @@ void simulation() {
     for (int j = 0; j < 100; ++j) {
 
       var = gRandom->Rndm();
-      theta = gRandom->Rndm() * TMath::Pi() * 2;
-      phi = gRandom->Rndm() * TMath::Pi();
+      phi = gRandom->Rndm() * TMath::Pi() * 2;
+      theta = gRandom->Rndm() * TMath::Pi();
 
-      h2->Fill(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+      h2->Fill(phi, theta);
 
       m = gRandom->Exp(1);
 
-      double px = m * sin(phi) * cos(theta);
-      double py = m * sin(phi) * sin(theta);
-      double pz = m * cos(phi);
+      double px = m * sin(theta) * cos(phi);
+      double py = m * sin(theta) * sin(phi);
+      double pz = m * cos(theta);
 
       h3->Fill(m);
       h4->Fill(sqrt(px * px + py * py));
@@ -184,10 +189,18 @@ void simulation() {
   }
 
   TFile *Histos = new TFile("Data.root", "RECREATE");
+
   for (int i = 0; i < 11; ++i) {
-    CTOT[i]->cd();
-    HTOT[i]->DrawCopy();
-    HTOT[i]->Write();
+    if (i == 1) {
+      CTOT[1]->cd();
+      HTOT[1]->DrawCopy("LEGO");
+      HTOT[1]->Write();
+
+    } else {
+      CTOT[i]->cd();
+      HTOT[i]->DrawCopy();
+      HTOT[i]->Write();
+    }
   }
 
   Histos->Close();
