@@ -50,15 +50,15 @@ void simulation() {
                       1000, 0, 10);
   h8->Sumw2();
   TH1F *h9 =
-      new TH1F("h9", "Invariant mass between pion+ -- kaon- and pion- -- kaon+",
+      new TH1F("h9", "Invariant mass between pion+ & kaon- and pion- & kaon+",
                1000, 0, 10);
   h9->Sumw2();
-  TH1F *h10 = new TH1F(
-      "h10", "Invariant mass between pion+ -- kaon+ and pion- -- kaon-", 1000,
-      0, 10);
+  TH1F *h10 =
+      new TH1F("h10", "Invariant mass between pion+ & kaon+ and pion- & kaon-",
+               1000, 0, 10);
   h10->Sumw2();
   TH1F *h11 =
-      new TH1F("h11", "Invariant mass between decay products", 1000, 0, 10);
+      new TH1F("h11", "Invariant mass between decay products", 1000, 0, 4);
   h11->Sumw2();
 
   TH1 *HTOT[11] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
@@ -77,11 +77,11 @@ void simulation() {
       new TCanvas("c8", "Invariant mass between particles with the same charge",
                   200, 10, 600, 400);
   TCanvas *c9 = new TCanvas(
-      "c9", "Invariant mass between pion+ -- kaon- and pion- -- kaon+", 200, 10,
+      "c9", "Invariant mass between pion+ & kaon- and pion- & kaon+", 200, 10,
       600, 400);
   TCanvas *c10 = new TCanvas(
-      "c10", "Invariant mass between pion+ -- kaon+ and pion- -- kaon-", 200,
-      10, 600, 400);
+      "c10", "Invariant mass between pion+ & kaon+ and pion- & kaon-", 200, 10,
+      600, 400);
   TCanvas *c11 = new TCanvas("c11", "Invariant mass between decay products",
                              200, 10, 600, 400);
 
@@ -166,10 +166,10 @@ void simulation() {
         Particle b = EventParticle[j];
         double invMass = a.InvMass(b);
         h6->Fill(invMass);
-        if (a.getPCharge() != b.getPCharge()) {
+        if (a.getPCharge() * b.getPCharge() == -1) {
           h7->Fill(invMass);
         }
-        if (a.getPCharge() == b.getPCharge()) {
+        if (a.getPCharge() * b.getPCharge() == 1) {
           h8->Fill(invMass);
         }
         if ((a.getIndex() == 0 && b.getIndex() == 3) ||
