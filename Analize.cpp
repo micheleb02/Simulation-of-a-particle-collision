@@ -63,13 +63,11 @@ void analize() {
             << "\nFit probability = " << f3->GetProb() << '\n'
             << '\n';
 
-  TH1F *h12 = new TH1F(*(TH1F *)data->Get(s[6]));
-  TH1F *h13 = new TH1F(*(TH1F *)data->Get(s[8]));
-  h12->Add(h12, HTOT[7], 1, -1);
-  h13->Add(h13, HTOT[9], 1, -1);
+  HTOT[6]->Add(HTOT[6], HTOT[7], 1, -1);
+  HTOT[8]->Add(HTOT[8], HTOT[9], 1, -1);
 
   TF1 *f4 = new TF1("f4", "gaus", 0, 10);
-  h12->Fit("f4", "Q0");
+  HTOT[6]->Fit("f4", "Q0");
   std::cout << "Mean (K* mass) = " << f4->GetParameter(1) << " +/- "
             << f4->GetParError(1)
             << "\nStd. Dev. (K* width) = " << f4->GetParameter(2) << " +/- "
@@ -79,7 +77,7 @@ void analize() {
             << '\n';
 
   TF1 *f5 = new TF1("f5", "gaus", 0, 10);
-  h13->Fit("f5", "Q0");
+  HTOT[8]->Fit("f5", "Q0");
   std::cout << "Mean (K* mass) = " << f5->GetParameter(1) << " +/- "
             << f5->GetParError(1)
             << "\nStd. Dev. (K* width) = " << f5->GetParameter(2) << " +/- "
