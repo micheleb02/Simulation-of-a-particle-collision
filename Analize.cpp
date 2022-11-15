@@ -66,7 +66,7 @@ void analize() {
   HTOT[6]->Add(HTOT[7], -1);
   HTOT[8]->Add(HTOT[9], -1);
 
-  TF1 *f4 = new TF1("f4", "gaus", 0, 10);
+  TF1 *f4 = new TF1("f4", "gaus", 0.75, 1.05);
   HTOT[6]->Fit("f4", "Q0");
   std::cout << "Mean (K* mass) = " << f4->GetParameter(1) << " +/- "
             << f4->GetParError(1)

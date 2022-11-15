@@ -41,51 +41,25 @@ void simulation() {
   TH1F *h3 = new TH1F("h3", "Impulse distribution", 1000, 0, 5);
   TH1F *h4 = new TH1F("h4", "Trasverse impulse distribution", 1000, 0, 5);
   TH1F *h5 = new TH1F("h5", "Energy distribution", 1000, 0, 10);
-  TH1F *h6 = new TH1F("h6", "Invariant mass", 1000, 0, 10);
+  TH1F *h6 = new TH1F("h6", "Invariant mass", 1000, 0, 7);
   h6->Sumw2();
-  TH1F *h7 =
-      new TH1F("h7", "Invariant mass between discord charge", 1000, 0, 10);
+  TH1F *h7 = new TH1F("h7", "Invariant mass - discord charge", 100, 0.75, 1.05);
   h7->Sumw2();
-  TH1F *h8 = new TH1F("h8", "Invariant mass between same charge particles",
-                      1000, 0, 10);
+  TH1F *h8 =
+      new TH1F("h8", "Invariant mass - same charge particles", 100, 0.75, 1.05);
   h8->Sumw2();
-  TH1F *h9 =
-      new TH1F("h9", "Invariant mass between pion+ & kaon- and pion- & kaon+",
-               1000, 0, 10);
+  TH1F *h9 = new TH1F("h9", "Invariant mass - pion+ & kaon- and pion- & kaon+",
+                      1000, 0, 7);
   h9->Sumw2();
-  TH1F *h10 =
-      new TH1F("h10", "Invariant mass between pion+ & kaon+ and pion- & kaon-",
-               1000, 0, 10);
+  TH1F *h10 = new TH1F(
+      "h10", "Invariant mass - pion+ & kaon+ and pion- & kaon-", 1000, 0, 7);
   h10->Sumw2();
-  TH1F *h11 =
-      new TH1F("h11", "Invariant mass between decay products", 1000, 0, 4);
+  TH1F *h11 = new TH1F("h11", "Invariant mass - decay products", 1000, 0, 2);
   h11->Sumw2();
 
   TH1 *HTOT[11] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
 
-  TCanvas *c1 = new TCanvas("c1", "Type distribution", 200, 10, 600, 400);
-  TCanvas *c2 = new TCanvas("c2", "Angle distribution", 200, 10, 600, 400);
-  TCanvas *c3 = new TCanvas("c3", "Impulse distribution", 200, 10, 600, 400);
-  TCanvas *c4 =
-      new TCanvas("c4", "Trasverse impulse distribution", 200, 10, 600, 400);
-  TCanvas *c5 = new TCanvas("c5", "Energy distribution", 200, 10, 600, 400);
-  TCanvas *c6 = new TCanvas("c6", "Invariant mass", 200, 10, 600, 400);
-  TCanvas *c7 =
-      new TCanvas("c7", "Invariant mass between particles with opposite charge",
-                  200, 10, 600, 400);
-  TCanvas *c8 =
-      new TCanvas("c8", "Invariant mass between particles with the same charge",
-                  200, 10, 600, 400);
-  TCanvas *c9 = new TCanvas(
-      "c9", "Invariant mass between pion+ & kaon- and pion- & kaon+", 200, 10,
-      600, 400);
-  TCanvas *c10 = new TCanvas(
-      "c10", "Invariant mass between pion+ & kaon+ and pion- & kaon-", 200, 10,
-      600, 400);
-  TCanvas *c11 = new TCanvas("c11", "Invariant mass between decay products",
-                             200, 10, 600, 400);
-
-  TCanvas *CTOT[11] = {c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11};
+  TCanvas *c = new TCanvas();
 
   for (int i = 0; i < 1E5; ++i) {
     for (int j = 0; j < 100; ++j) {
@@ -188,20 +162,22 @@ void simulation() {
     Decay.clear();
   }
 
-  TFile *Histos = new TFile("Data.root", "RECREATE");
+  TFile *data = new TFile("Data.root", "RECREATE");
 
   for (int i = 0; i < 11; ++i) {
-    if (i == 1) {
-      CTOT[1]->cd();
-      HTOT[1]->DrawCopy("LEGO");
-      HTOT[1]->Write();
-
-    } else {
-      CTOT[i]->cd();
-      HTOT[i]->DrawCopy();
-      HTOT[i]->Write();
-    }
+    HTOT[i]->Write();
   }
 
-  Histos->Close();
+  data->Close();
+
+  c->Print("Invariant mass histograms.pdf[");
+
+  c->Divide(2, 3);
+  for (int i = 1; i <= 6; ++i) {
+    c->cd(i);
+    HTOT[i + 4]->Draw();
+  }
+
+  c->Print("Invariant mass histograms.pdf");
+  c->Print("Invariant mass histograms.pdf]");
 }
