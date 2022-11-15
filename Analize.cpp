@@ -63,8 +63,8 @@ void analize() {
             << "\nFit probability = " << f3->GetProb() << '\n'
             << '\n';
 
-  HTOT[6]->Add(HTOT[6], HTOT[7], 1, -1);
-  HTOT[8]->Add(HTOT[8], HTOT[9], 1, -1);
+  HTOT[6]->Add(HTOT[7], -1);
+  HTOT[8]->Add(HTOT[9], -1);
 
   TF1 *f4 = new TF1("f4", "gaus", 0, 10);
   HTOT[6]->Fit("f4", "Q0");
