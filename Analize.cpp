@@ -7,6 +7,7 @@
 #include "TMath.h"
 #include "TRandom.h"
 #include "TStyle.h"
+#include <fstream>
 
 void analize() {
 
@@ -29,16 +30,6 @@ void analize() {
   // Filling the arrays and printing the number of entries
   for (int i = 0; i < 13; ++i) {
     HTOT[i] = (TH1 *)data->Get(s[i]);
-    if (i < 11) {
-      std::cout << HTOT[i]->GetTitle() << " has " << HTOT[i]->GetEntries()
-                << " entries" << '\n';
-    }
-  }
-
-  std::cout << "\nPercentage of particles:\n";
-  for (int i = 0; i < 7; ++i) {
-    std::cout << names[i] << " = " << ((HTOT[0]->GetBinContent(i + 1)) / (1E7))
-              << '\n';
   }
 
   // Defining a fit for both the axis projections of the angles distributions
@@ -50,24 +41,9 @@ void analize() {
   ProjX->Fit("f1", "Q0");
   ProjY->Fit("f2", "Q0");
 
-  std::cout << "\nMean phi = " << ProjX->GetMean() << " +/- "
-            << ProjX->GetMeanError() << "\nMean theta = " << ProjY->GetMean()
-            << " +/- " << ProjY->GetMeanError();
-  std::cout << "\nNormalized Chi for phi = "
-            << (f1->GetChisquare()) / (f1->GetNDF())
-            << "\nNormalized Chi for theta  = "
-            << (f2->GetChisquare()) / (f2->GetNDF()) << '\n'
-            << '\n';
-
   // Defining a fit for the impulse distribution (exponential)
-  TF1 *f3 = new TF1("f3", "[0]*e^([1]*x)", 0, 7);
+  TF1 *f3 = new TF1("f3", "[0]*e^(-[1]*x)", 0, 7);
   HTOT[2]->Fit("f3", "Q0");
-  std::cout << "Parameter A = " << f3->GetParameter(0) << " +/- "
-            << f3->GetParError(0) << "\nParameter B = " << f3->GetParameter(1)
-            << " +/- " << f3->GetParError(1)
-            << "\nNormalized Chi = " << ((f3->GetChisquare()) / (f3->GetNDF()))
-            << "\nFit probability = " << f3->GetProb() << '\n'
-            << '\n';
 
   // Defining the histograms difference and fitting them with a gaussian
   TH1F *h9c = new TH1F(*(TH1F *)data->Get(s[8]));
@@ -76,23 +52,72 @@ void analize() {
 
   TF1 *f4 = new TF1("f4", "gaus", 0.75, 1.05);
   HTOT[11]->Fit("f4", "Q0");
-  std::cout << "Mean (K* mass) = " << f4->GetParameter(1) << " +/- "
-            << f4->GetParError(1)
-            << "\nStd. Dev. (K* width) = " << f4->GetParameter(2) << " +/- "
-            << f4->GetParError(2)
-            << "\nNormalized Chi = " << ((f4->GetChisquare()) / (f4->GetNDF()))
-            << "\nFit probability = " << f4->GetProb() << '\n'
-            << '\n';
 
   TF1 *f5 = new TF1("f5", "gaus", 0, 7);
   h9c->Fit("f5", "Q0");
-  std::cout << "Mean (K* mass) = " << f5->GetParameter(1) << " +/- "
-            << f5->GetParError(1)
-            << "\nStd. Dev. (K* width) = " << f5->GetParameter(2) << " +/- "
-            << f5->GetParError(2)
-            << "\nNormalized Chi = " << ((f5->GetChisquare()) / (f5->GetNDF()))
-            << "\nFit probability = " << f5->GetProb() << '\n'
-            << '\n';
+
+  // Creating a text file containing all results obtained
+  std::ofstream fw("./Data result.txt", std::ofstream::out);
+
+  if (fw.is_open()) {
+
+    fw << "##NUMBER OF ENTRIES FOR EACH HISTOGRAM##\n";
+
+    for (int i = 0; i < 11; ++i) {
+      fw << HTOT[i]->GetTitle() << " has " << HTOT[i]->GetEntries()
+         << " entries" << '\n';
+    }
+
+    fw << "\n##PERCENTAGE OF GENERATED PARTICLE##\n";
+    for (int i = 0; i < 7; ++i) {
+      fw << names[i] << " = " << ((HTOT[0]->GetBinContent(i + 1)) / (1E7)) * 100
+         << " %\n";
+    }
+
+    fw << "\n##ANGLES DISTRIBUTION DATA##\n";
+    fw << "Mean phi = " << ProjX->GetMean() << " +/- " << ProjX->GetMeanError()
+       << " rad\nMean theta = " << ProjY->GetMean() << " +/- "
+       << ProjY->GetMeanError() << " rad";
+    fw << "\nNormalized Chi for phi = " << (f1->GetChisquare()) / (f1->GetNDF())
+       << "\nNormalized Chi for theta  = "
+       << (f2->GetChisquare()) / (f2->GetNDF()) << '\n'
+       << '\n';
+
+    fw << "##EXPONENTIAL FIT OF THE IMPULSE DISTRIBUTION##\n";
+    fw << "Parameter A = " << f3->GetParameter(0) << " +/- "
+       << f3->GetParError(0)
+       << " GeV/c^2\nParameter B = " << f3->GetParameter(1) << " +/- "
+       << f3->GetParError(1)
+       << " GeV\nNormalized Chi = " << ((f3->GetChisquare()) / (f3->GetNDF()))
+       << "\nFit probability = " << f3->GetProb() << '\n'
+       << '\n';
+
+    fw << "##GAUSSIAN FIT OF THE DIFFERENCE BEWTEEN INVARIANT MASS "
+          "DISTRIBUTION "
+          "(DEPENDING ON: CHARGE)##\n";
+    fw << "Mean (K* mass) = " << f4->GetParameter(1) << " +/- "
+       << f4->GetParError(1)
+       << " GeV/c^2\nStd. Dev. (K* width) = " << f4->GetParameter(2) << " +/- "
+       << f4->GetParError(2) << " GeV/c^2\nNormalized Chi = "
+       << ((f4->GetChisquare()) / (f4->GetNDF()))
+       << "\nFit probability = " << f4->GetProb() << '\n'
+       << '\n';
+
+    fw << "##GAUSSIAN FIT OF THE DIFFERENCE BEWTEEN INVARIANT MASS "
+          "DISTRIBUTION "
+          "(DEPENDING ON: TYPE OF PARTICLE)##\n";
+    fw << "Mean (K* mass) = " << f5->GetParameter(1) << " +/- "
+       << f5->GetParError(1)
+       << " GeV/c^2\nStd. Dev. (K* width) = " << f5->GetParameter(2) << " +/- "
+       << f5->GetParError(2) << " GeV/c^2\nNormalized Chi = "
+       << ((f5->GetChisquare()) / (f5->GetNDF()))
+       << "\nFit probability = " << f5->GetProb() << '\n'
+       << '\n';
+
+    fw.close();
+  } else {
+    std::cout << "Unable tu open Data result.txt" << '\n';
+  }
 
   // Defining the canvas, dividing it in 6 tables and drawing the invariant mass
   // histograms
