@@ -13,6 +13,10 @@ void analize() {
   // Style options
   gStyle->SetOptStat(2210);
   gStyle->SetOptFit(1111);
+  gStyle->SetStatW(0.3);
+  gStyle->SetStatH(0.15);
+  gStyle->SetStatX(0.9);
+  gStyle->SetStatY(0.9);
 
   // Definition of a file containing the histograms and arrays to manage them
   TFile *data = new TFile("Data.root");
