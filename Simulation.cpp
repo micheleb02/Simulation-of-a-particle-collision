@@ -5,6 +5,7 @@
 #include "TH2F.h"
 #include "TMath.h"
 #include "TRandom.h"
+#include "TStyle.h"
 
 void simulation() {
 
@@ -43,11 +44,15 @@ void simulation() {
   TH1F *h5 = new TH1F("h5", "Energy distribution", 1000, 0, 10);
   TH1F *h6 = new TH1F("h6", "Invariant mass", 1000, 0, 7);
   h6->Sumw2();
-  TH1F *h7 = new TH1F("h7", "Invariant mass - discord charge", 100, 0.75, 1.05);
+  TH1F *h7 = new TH1F("h7", "Invariant mass - discord charge", 1000, 0, 7);
   h7->Sumw2();
+  TH1F *h7c = new TH1F("h7c", "h7 copy to fit", 100, 0.75, 1.05);
+  h7c->Sumw2();
   TH1F *h8 =
-      new TH1F("h8", "Invariant mass - same charge particles", 100, 0.75, 1.05);
+      new TH1F("h8", "Invariant mass - same charge particles", 1000, 0, 7);
   h8->Sumw2();
+  TH1F *h8c = new TH1F("h8c", "h8 copy to fit", 100, 0.75, 1.05);
+  h8c->Sumw2();
   TH1F *h9 = new TH1F("h9", "Invariant mass - pion+ & kaon- and pion- & kaon+",
                       1000, 0, 7);
   h9->Sumw2();
@@ -57,9 +62,7 @@ void simulation() {
   TH1F *h11 = new TH1F("h11", "Invariant mass - decay products", 1000, 0, 2);
   h11->Sumw2();
 
-  TH1 *HTOT[11] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11};
-
-  TCanvas *c = new TCanvas();
+  TH1 *HTOT[13] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h7c, h8c};
 
   for (int i = 0; i < 1E5; ++i) {
     for (int j = 0; j < 100; ++j) {
@@ -142,9 +145,11 @@ void simulation() {
         h6->Fill(invMass);
         if (a.getPCharge() * b.getPCharge() == -1) {
           h7->Fill(invMass);
+          h7c->Fill(invMass);
         }
         if (a.getPCharge() * b.getPCharge() == 1) {
           h8->Fill(invMass);
+          h8c->Fill(invMass);
         }
         if ((a.getIndex() == 0 && b.getIndex() == 3) ||
             (a.getIndex() == 1 && b.getIndex() == 2)) {
@@ -164,20 +169,9 @@ void simulation() {
 
   TFile *data = new TFile("Data.root", "RECREATE");
 
-  for (int i = 0; i < 11; ++i) {
+  for (int i = 0; i < 13; ++i) {
     HTOT[i]->Write();
   }
 
   data->Close();
-
-  c->Print("Invariant mass histograms.pdf[");
-
-  c->Divide(2, 3);
-  for (int i = 1; i <= 6; ++i) {
-    c->cd(i);
-    HTOT[i + 4]->Draw();
-  }
-
-  c->Print("Invariant mass histograms.pdf");
-  c->Print("Invariant mass histograms.pdf]");
 }
