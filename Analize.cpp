@@ -103,7 +103,9 @@ void analize() {
   for (int i = 1; i <= 6; ++i) {
     c->cd(i);
     HTOT[i + 4]->GetXaxis()->SetTitle("Invariant mass (Gev/c^{2})");
+    HTOT[i + 4]->SetTitleSize(0.05, "x");
     HTOT[i + 4]->GetYaxis()->SetTitle("Number of entries");
+    HTOT[i + 4]->SetTitleSize(0.05, "y");
     HTOT[i + 4]->SetLineColor(kBlue);
     HTOT[i + 4]->SetFillColor(kAtlantic);
     HTOT[i + 4]->Sumw2(kFALSE);
