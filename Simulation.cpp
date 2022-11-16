@@ -11,10 +11,12 @@ void simulation() {
 
   gRandom->SetSeed();
 
+  // Vector used to manage the generated particles
   std::vector<Particle> EventParticle;
   std::vector<Particle> Resonance;
   std::vector<Particle> Decay;
 
+  // Defining the values for each particle type
   char *p = new char{'p'};
   char *P = new char{'P'};
   char *k = new char{'k'};
@@ -31,11 +33,14 @@ void simulation() {
   Particle::AddParticleType(D, 0.93827, -1);
   Particle::AddParticleType(n, 0.89166, 0, 0.050);
 
+  // Some variables used during the generations
   double var = 0;
   double theta = 0;
   double phi = 0;
   double m = 0;
 
+  // Defining all the needed histograms and calling Sumw2 to correctly add the
+  // entries
   TH1F *h1 = new TH1F("h1", "Type distribution", 7, 0, 7);
   TH2F *h2 = new TH2F("h2", "Angle distribution", 100, 0, 2 * TMath::Pi(), 100,
                       0, TMath::Pi());
@@ -64,6 +69,7 @@ void simulation() {
 
   TH1 *HTOT[13] = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h7c, h8c};
 
+  // Generation loop
   for (int i = 0; i < 1E5; ++i) {
     for (int j = 0; j < 100; ++j) {
 
@@ -121,22 +127,27 @@ void simulation() {
       }
     }
 
+    // Adding to h1 and h5 the particles generated (not considering K*)
     for (auto k : EventParticle) {
       h1->Fill(k.getIndex());
       h5->Fill(k.getEnergy());
     }
 
+    // Adding the K* particles to h1 and h5
     for (auto k : Decay) {
       h1->Fill(k.getIndex());
       h5->Fill(k.getEnergy());
     }
 
+    // Adding to EventParticle the products of the decayed K*
     for (auto k : Resonance) {
       EventParticle.push_back(k);
     }
 
     int size = EventParticle.size();
 
+    // Calculating the different combination of invariant mass and filling the
+    // histograms
     for (int i = 0; i < size - 1; ++i) {
       for (int j = i + 1; j < size; ++j) {
         Particle a = EventParticle[i];
@@ -162,11 +173,13 @@ void simulation() {
       }
     }
 
+    // Clearing the vectors to prepare them for the next cycle
     EventParticle.clear();
     Resonance.clear();
     Decay.clear();
   }
 
+  // Creating a root file containing the histograms
   TFile *data = new TFile("Data.root", "RECREATE");
 
   for (int i = 0; i < 13; ++i) {

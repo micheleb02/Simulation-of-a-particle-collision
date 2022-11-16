@@ -10,9 +10,11 @@
 
 void analize() {
 
+  // Style options
   gStyle->SetOptStat(2210);
   gStyle->SetOptFit(1111);
 
+  // Definition of a file containing the histograms and arrays to manage them
   TFile *data = new TFile("Data.root");
   TH1 *HTOT[13];
   TString s[13] = {"h1", "h2", "h3",  "h4",  "h5",  "h6", "h7",
@@ -20,6 +22,7 @@ void analize() {
   TString names[7] = {"pion+",   "pion-",   "kaon+", "kaon-",
                       "proton+", "proton-", "kaon*"};
 
+  // Filling the arrays and printing the number of entries
   for (int i = 0; i < 13; ++i) {
     HTOT[i] = (TH1 *)data->Get(s[i]);
     if (i < 11) {
@@ -34,6 +37,8 @@ void analize() {
               << '\n';
   }
 
+  // Defining a fit for both the axis projections of the angles distributions
+  // (uniform)
   TF1 *f1 = new TF1("f1", "[0]", 0, 2 * TMath::Pi());
   TF1 *f2 = new TF1("f2", "[0]", 0, TMath::Pi());
   TH1D *ProjX = (((TH2 *)data->Get(s[1]))->ProjectionX("ProjX", 0, 100));
@@ -50,6 +55,7 @@ void analize() {
             << (f2->GetChisquare()) / (f2->GetNDF()) << '\n'
             << '\n';
 
+  // Defining a fit for the impulse distribution (exponential)
   TF1 *f3 = new TF1("f3", "[0]*e^([1]*x)", 0, 7);
   HTOT[2]->Fit("f3", "Q0");
   std::cout << "Parameter A = " << f3->GetParameter(0) << " +/- "
@@ -59,6 +65,7 @@ void analize() {
             << "\nFit probability = " << f3->GetProb() << '\n'
             << '\n';
 
+  // Defining the histograms difference and fitting them with a gaussian
   TH1F *h9c = new TH1F(*(TH1F *)data->Get(s[8]));
   HTOT[11]->Add(HTOT[12], -1);
   h9c->Add(HTOT[9], -1);
@@ -73,7 +80,7 @@ void analize() {
             << "\nFit probability = " << f4->GetProb() << '\n'
             << '\n';
 
-  TF1 *f5 = new TF1("f5", "gaus", 0, 10);
+  TF1 *f5 = new TF1("f5", "gaus", 0, 7);
   h9c->Fit("f5", "Q0");
   std::cout << "Mean (K* mass) = " << f5->GetParameter(1) << " +/- "
             << f5->GetParError(1)
@@ -83,6 +90,8 @@ void analize() {
             << "\nFit probability = " << f5->GetProb() << '\n'
             << '\n';
 
+  // Defining the canvas, dividing it in 6 tables and drawing the invariant mass
+  // histograms
   TCanvas *c = new TCanvas();
   c->Print("Invariant mass histograms.pdf[");
   c->Divide(2, 3);
@@ -91,6 +100,8 @@ void analize() {
     c->cd(i);
     HTOT[i + 4]->GetXaxis()->SetTitle("Invariant mass (Gev/c^{2})");
     HTOT[i + 4]->GetYaxis()->SetTitle("Number of entries");
+    HTOT[i + 4]->SetLineColor(kBlue);
+    HTOT[i + 4]->SetFillColor(kAtlantic);
     HTOT[i + 4]->Sumw2(kFALSE);
     HTOT[i + 4]->Draw();
   }
