@@ -27,8 +27,8 @@ Normalized Chi for phi = 1.15625
 Normalized Chi for theta  = 1.15403
 
 ##EXPONENTIAL FIT OF THE IMPULSE DISTRIBUTION##
-Parameter A = 50029 +/- 23.1352 GeV/c^2
-Parameter B = 1.00068 +/- 0.000348409 GeV
+Parameter A = 50029 +/- 23.1352 GeV
+Parameter B = 1.00068 +/- 0.000348409
 Normalized Chi = 1.00333
 Fit probability = 0.464445
 

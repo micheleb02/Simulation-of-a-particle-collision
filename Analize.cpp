@@ -85,10 +85,9 @@ void analize() {
 
     fw << "##EXPONENTIAL FIT OF THE IMPULSE DISTRIBUTION##\n";
     fw << "Parameter A = " << f3->GetParameter(0) << " +/- "
-       << f3->GetParError(0)
-       << " GeV/c^2\nParameter B = " << f3->GetParameter(1) << " +/- "
-       << f3->GetParError(1)
-       << " GeV\nNormalized Chi = " << ((f3->GetChisquare()) / (f3->GetNDF()))
+       << f3->GetParError(0) << " GeV\nParameter B = " << f3->GetParameter(1)
+       << " +/- " << f3->GetParError(1)
+       << "\nNormalized Chi = " << ((f3->GetChisquare()) / (f3->GetNDF()))
        << "\nFit probability = " << f3->GetProb() << '\n'
        << '\n';
 
