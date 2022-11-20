@@ -9,6 +9,10 @@
 
 void simulation() {
 
+  R__LOAD_LIBRARY(ParticleType_cpp.so);
+  R__LOAD_LIBRARY(ResonanceType_cpp.so);
+  R__LOAD_LIBRARY(Particle_cpp.so);
+
   gRandom->SetSeed();
 
   // Vector used to manage the generated particles

@@ -12,35 +12,50 @@ Invariant mass - pion+ & kaon+ and pion- & kaon- has 2.37718e+07 entries
 Invariant mass - decay products has 100112 entries
 
 ##PERCENTAGE OF GENERATED PARTICLE##
-pion+ = 39.998 %
-pion- = 39.9939 %
-kaon+ = 4.99107 %
-kaon- = 5.00729 %
-proton+ = 4.49994 %
-proton- = 4.5086 %
-kaon* = 1.00112 %
+pion+ = (39.998 +/- 0.0199995) %
+pion- = (39.9939 +/- 0.0199985) %
+kaon+ = (4.99107 +/- 0.00706475) %
+kaon- = (5.00729 +/- 0.00707622) %
+proton+ = (4.49994 +/- 0.00670816) %
+proton- = (4.5086 +/- 0.00671461) %
+kaon* = (1.00112 +/- 0.00316405) %
 
 ##ANGLES DISTRIBUTION DATA##
-Mean phi = 3.14161 +/- 0.000573577 rad
-Mean theta = 1.57095 +/- 0.000286734 rad
-Normalized Chi for phi = 1.15625
-Normalized Chi for theta  = 1.15403
+Fit parameter (phi) = 99998.9 +/- 31.6226
+Fit parameter (theta) = 99998.8 +/- 31.6226
+Chi squared (phi)= 114.469
+DOF (phi)= 99
+Normalized Chi (phi) = 1.15625
+Chi squared (theta) = 114.249
+DOF (theta) = 99
+Normalized Chi (theta) = 1.15403
 
 ##EXPONENTIAL FIT OF THE IMPULSE DISTRIBUTION##
 Parameter A = 50029 +/- 23.1352 GeV
 Parameter B = 1.00068 +/- 0.000348409
+Chi squared = 1001.32
+DOF = 998
 Normalized Chi = 1.00333
 Fit probability = 0.464445
 
 ##GAUSSIAN FIT OF THE DIFFERENCE BEWTEEN INVARIANT MASS DISTRIBUTION (DEPENDING ON: CHARGE)##
 Mean (K* mass) = 0.892166 +/- 0.00572111 GeV/c^2
-Std. Dev. (K* width) = 0.0521159 +/- 0.00577614 GeV/c^2
+Std. Dev. (K* width) = 0.0521159 +/- 0.00577614GeV/c^2
+Amplitude = 2189.67 +/- 202.098 GeV/c^2
 Normalized Chi = 0.855175
 Fit probability = 0.844558
 
 ##GAUSSIAN FIT OF THE DIFFERENCE BEWTEEN INVARIANT MASS DISTRIBUTION (DEPENDING ON: TYPE OF PARTICLE)##
 Mean (K* mass) = 0.890856 +/- 0.00209359 GeV/c^2
 Std. Dev. (K* width) = 0.0505194 +/- 0.00216468 GeV/c^2
+Amplitude = 5396.56 +/- 194.22 GeV/c^2
 Normalized Chi = 0.97549
 Fit probability = 0.695286
+
+##GAUSSIAN FIT OF THE INVARIANT MASS DISTRIBUTION BETWEEN DECAY PRODUCTS##
+Mean = 0.89169 +/- 0.00015799 GeV/c^2
+Std. Dev. = 0.0498911 +/- 0.000111731GeV/c^2
+Amplitude = 1598.12 +/- 6.19128 GeV/c^2
+Normalized Chi = 0.9844
+Fit probability = 0.548361
 
