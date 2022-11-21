@@ -146,7 +146,7 @@ void analize() {
   gStyle->SetStatW(0.3);
   gStyle->SetStatH(0.05);
 
-  TCanvas *c = new TCanvas();
+  TCanvas *c = new TCanvas("c", "First batch", 200, 10, 800, 400);
   c->Print("First batch.pdf[");
   c->Divide(2, 2);
 
@@ -194,7 +194,8 @@ void analize() {
   gStyle->SetStatFontSize(0.02);
   gStyle->SetStatW(0.2);
 
-  TCanvas *c2 = new TCanvas();
+  TCanvas *c2 =
+      new TCanvas("c2", "Invariant mass histograms", 200, 10, 1300, 400);
   c2->Print("Invariant mass histograms.pdf[");
   c2->Divide(3, 1);
 
@@ -202,18 +203,17 @@ void analize() {
   h11c->GetXaxis()->SetRangeUser(0.6, 1.2);
   h11c->GetYaxis()->SetRangeUser(0., 2500.);
   h7c->GetYaxis()->SetRangeUser(-1200., 6000.);
-  h7c->SetTitleSize(0.07);
   h9c->GetXaxis()->SetRangeUser(0.4, 1.4);
 
   TF1 *FIT[3] = {f4, f5, f6};
-  TH1F *HFIT[3] = {h11c, h7c, h9c};
+  TH1F *HFIT[3] = {h7c, h9c, h11c};
 
   for (int i = 0; i < 3; ++i) {
     c2->cd(i + 1);
     HFIT[i]->GetXaxis()->SetTitle("Invariant mass (Gev/c^{2})");
     HFIT[i]->SetTitleSize(0.03, "x");
     HFIT[i]->GetYaxis()->SetTitle("Number of entries");
-    HFIT[i]->GetYaxis()->SetTitleOffset(1.9);
+    HFIT[i]->GetYaxis()->SetTitleOffset(1.6);
     HFIT[i]->SetTitleSize(0.03, "y");
     HFIT[i]->SetLabelSize(0.03, "x");
     HFIT[i]->SetLabelSize(0.03, "y");
@@ -221,6 +221,7 @@ void analize() {
     HFIT[i]->SetFillColor(kAtlantic);
     HFIT[i]->Sumw2(kFALSE);
     HFIT[i]->Draw();
+    FIT[i]->SetLineColor(kOrange + 7);
     FIT[i]->Draw("SAME");
   }
 
