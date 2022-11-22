@@ -142,17 +142,18 @@ void analize() {
   gStyle->SetStatX(0.9);
   gStyle->SetStatY(0.9);
 
-  gStyle->SetStatFontSize(0.03);
+  gStyle->SetStatFontSize(0.035);
   gStyle->SetStatW(0.3);
-  gStyle->SetStatH(0.05);
+  gStyle->SetStatH(0.08);
 
-  TCanvas *c = new TCanvas("c", "First batch", 200, 10, 800, 400);
+  TCanvas *c = new TCanvas("c", "First batch", 200, 10, 1200, 700);
   c->Print("First batch.pdf[");
   c->Divide(2, 2);
 
   c->cd(1);
   HTOT[0]->GetXaxis()->SetTitle("Type of particle");
   HTOT[0]->GetYaxis()->SetTitle("Number of entries");
+  HTOT[0]->GetYaxis()->SetTitleOffset(1.1);
   HTOT[0]->SetTitleSize(0.05, "x");
   HTOT[0]->SetTitleSize(0.05, "y");
   HTOT[0]->SetLineColor(kBlue);
@@ -161,6 +162,7 @@ void analize() {
   c->cd(2);
   HTOT[2]->GetXaxis()->SetTitle("Impulse");
   HTOT[2]->GetYaxis()->SetTitle("Number of entries");
+  HTOT[2]->GetYaxis()->SetTitleOffset(1.1);
   HTOT[2]->SetTitleSize(0.05, "x");
   HTOT[2]->SetTitleSize(0.05, "y");
   HTOT[2]->SetLineColor(kBlue);
@@ -168,8 +170,10 @@ void analize() {
   HTOT[2]->Draw();
   f3->Draw("SAME");
   c->cd(3);
+  ProjX->SetTitle("Phi angle distribution");
   ProjX->GetXaxis()->SetTitle("Phi");
   ProjX->GetYaxis()->SetTitle("Number of entries");
+  ProjX->GetYaxis()->SetTitleOffset(1.1);
   ProjX->SetTitleSize(0.05, "x");
   ProjX->SetTitleSize(0.05, "y");
   ProjX->SetLineColor(kBlue);
@@ -177,8 +181,10 @@ void analize() {
   ProjX->Draw();
   f1->Draw("SAME");
   c->cd(4);
+  ProjY->SetTitle("Theta angle distribution");
   ProjY->GetXaxis()->SetTitle("Theta");
   ProjY->GetYaxis()->SetTitle("Number of entries");
+  ProjY->GetYaxis()->SetTitleOffset(1.1);
   ProjY->SetTitleSize(0.05, "x");
   ProjY->SetTitleSize(0.05, "y");
   ProjY->SetLineColor(kBlue);
@@ -191,13 +197,14 @@ void analize() {
 
   // Style for the second pdf + drawing
 
-  gStyle->SetStatFontSize(0.02);
-  gStyle->SetStatW(0.2);
+  gStyle->SetStatFontSize(0.04);
+  gStyle->SetStatW(0.15);
+  gStyle->SetStatH(0.9);
 
   TCanvas *c2 =
-      new TCanvas("c2", "Invariant mass histograms", 200, 10, 1300, 400);
+      new TCanvas("c2", "Invariant mass histograms", 200, 10, 400, 800);
   c2->Print("Invariant mass histograms.pdf[");
-  c2->Divide(3, 1);
+  c2->Divide(1, 3);
 
   // Histograms cosmetics
   h11c->GetXaxis()->SetRangeUser(0.6, 1.2);
