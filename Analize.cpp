@@ -39,6 +39,8 @@ void analize() {
 
   // Defining the histograms difference and fitting them with a gaussian
   TH1F *h9c = new TH1F(*(TH1F *)data->Get(s[8]));
+  h9c->SetTitle("Difference between invariant mass distribution (Depending on "
+                "type of particle)");
   TH1F *h7c = new TH1F(*(TH1F *)data->Get(s[11]));
   h7c->SetTitle("Difference between invariant mass (Depending on charge)");
   TH1F *h11c = new TH1F(*(TH1F *)data->Get(s[10]));
@@ -150,7 +152,16 @@ void analize() {
   c->Print("First batch.pdf[");
   c->Divide(2, 2);
 
+  TString labelNames[7] = {"#pi^{+}", "#pi^{-}", "K^{+}", "K^{-}",
+                           "p^{+}",   "p^{-}",   "K*"};
+
   c->cd(1);
+  for (int i = 0; i < 7; ++i) {
+    HTOT[0]->GetXaxis()->SetBinLabel(i + 1, labelNames[i]);
+  }
+  HTOT[0]->GetXaxis()->SetLabelSize(0.07);
+  HTOT[0]->GetXaxis()->SetLabelOffset(0.007);
+  HTOT[0]->SetStats(kFALSE);
   HTOT[0]->GetXaxis()->SetTitle("Type of particle");
   HTOT[0]->GetYaxis()->SetTitle("Number of entries");
   HTOT[0]->GetYaxis()->SetTitleOffset(1.1);
